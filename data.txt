@@ -1,0 +1,49 @@
+// your data file for the character sorter. 
+// To use the sorter, make sure this file exists in the same directory as "sorter.html".
+// To get started, add characters into the array "var charArray = [ ... ]"
+// note that upon first use, the only part that needs to be defined is "var charArray = [ ... ]" 
+// You can delete the rest as shown in "array-demo.js"
+
+
+
+// after using the sorter and saving your sorter data into this file (remember backups!), you will have a variable:
+
+var numQuestion = 1;	
+
+// the sorter should give you this variable by clicking on "Debug Mode". 
+// It defines your match counter. If you want to reset the match counter, remove the line (or forward slash it out).
+
+
+
+// below is the place to tell your sorter to delete certain characters from your presortetd data.
+// insert the character IDs (the last number in each line defining your character) into this array:
+
+var remove = [  ];
+
+// here is an example how to remove the characters with the IDs 3, 5 and 11 from your array:
+// var remove = [ 2, 5, 11 ];
+
+
+
+// below is your character array, the only code necessary for the sorter to launch.
+// The array defines a character name and image link to a portrait of the character.
+// if you already pre-sorted your characters, your will find numbers added to each line. 
+// these define the match counter, win counter and a unique character ID. 
+// Please do not manually change character IDs, as they are set up in a particular way for the sorter to use.
+
+var charArray = [
+[ "Mayuri Shiina", "https://i.imgur.com/gYVhsgr.png" ],
+[ "Taiga Kagami", "https://i.imgur.com/BfONHuJ.png" ],
+[ "Rangiku Matsumoto", "https://i.imgur.com/lqeHfAK.png" ],
+[ "Genos", "https://i.imgur.com/6GFAQ2n.png" ]			// please note that the last line does not end with a comma.
+];
+
+// a line from the sorted data will look something like this:
+// [ "Grimmjow Jaegerjaquez", "https://i.imgur.com/hP8Id2i.png", 51, 50.5, 1303 ],
+
+
+
+// below is your match counter. The script will fill in numbers that define matchups that you already decided upon.
+// this prevents double matchups and thus helps the sorter to get more quickly through all possibilites.
+
+var matches = [  ];

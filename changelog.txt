@@ -1,0 +1,182 @@
+2021-11-22
+A separate script meant for removing characters and their match keys from the presorted data has now been merged into the functionality of the main sorter.
+
+You can now define an array "var remove = [  ];" in your data file that contains the character IDs to be removed within the presorted data. The sorter will check if any match IDs contained the character to be removed and delete it, then remove the characters from the character array. This provides a save way of removing characters without preventing future matchups from happening because of match IDs that record nonexistent characters.
+
+Note that if you add new characters to the array that you previously removed characters from, the new characters will end up with IDs that you removed. Just keep that in mind in case you modify the data outside of the sorter.
+
+To implement the script that removes characters, it was necessary to rewrite the data generation part of the script to make sure new characters still get an ID that is not yet taken by another character.
+
+
+2021-11-25
+Matchups are now a little more random for a large number of characters. This is to decrease the chance of characters getting stuck at an extreme end early on in the sorting process. It should also decrease the chance of a character getting stuck in the mid-range late in the sorting process. In consequence, it can take a bit longer to enter phase 2 again though. The change only matters if the number of characters is greater than 70 or so. For less than 30 or so characters, the change actually has the opposite effect, but to a very low magnitude.
+
+Technical Details: The variable "range" used to control 2 things: 
+- The minimum number of matches each character had to be in so the sorter would enter phase 2
+- The range of characters of similar match number (phase 1) or score (phase 2) that were used to generate a match
+
+This variable was chosen to increase very slowly for a vast number of characters, so phase 2 can be entered in a reasonable amount of time. The consequence was that character matchups resulted in characters with very similar score in phase 2. This can make it difficult to get the character into a wider context.
+
+The variable controlling phase 2 entry is now called "threshold" and is calculated the same as before. The variable controlling the range of characters within matchups are generated is now split off and called "range". It is defined as 0.1*charArray.length, so characters can now be matched across +- 10% of the score table. The randomizer in phase 1 used to only pick characters with a matchnumber lower than "range" (now "threshold"). It still picks the first character within "threshold", but the 2nd will be chosen within "range". So, more matches are possible before the sorter is forced into phase 2.
+Note that the "threshold" function is curved, so between an array length of ~ 7 - 40 it has a value of 1 lower than "range". Since "range" is a linear function, it keeps increasing and is truly larger than "threshold" after an array length greater than ~70.
+
+
+2021-11-26
+"range" is now guaranteed to be equal or greater than "threshold". This is to not unintentionally restrict the randomizer if the number of characters is lower than ~40.
+
+Fixed a bug that caused the array dependent variables to be generated before the sorter would remove characters if instructed. This resulted in those variables to be calculated incorrectly under certain circumstances (values were too high), so the sorter might have been able to get stuck shortly before entering phase 3.
+
+Renamed the divisor index "i" to "d" to avoid conflicts with variables defined in loops and functions later on.
+
+Moved the JavaScript part of "sorter.html" to a new file "sorter.js". This is to decouple the html backbone that can be customized from the script that is not intended for user-side modification.
+
+
+2021-11-29
+The counter for breaking out of a forced match has been lowered back to "threshold". The "range" property is already used for finding the subset of characters to match with, so increasing the chances of success. The now lower counter gives back a small chance to get a truly random match late in the sorting process.
+
+
+2022-04-14
+Changed table spacing to match default image size (225x350 px).
+
+Added a "Skip for now" button that unlike "Can't decide" doesn't change the array or sorter data, meaning you can get this exact matchup again. This option is useful when you are indecisive and want to come back to it again later. "Can't decide" should instead be used if the characters are actually tied in your opinion. Since it doesn't make sense to show the same match again directly after skipping it, the sorter will make sure to genereate a different one if possible. To prevent the sorter from breaking if you tried to skip the very last match, it only tries so often.
+
+
+2022-04-15
+Minor adjustments to site layout and added a title to the html site for your browser to identify.
+
+added a "Start!" button upon launch. The script will first promt you to initialize the sorting process, or let you show the scores or data of the input array. After clicking start, the familiar match table is displayed as well as the "force match" button. Script works as usual from this point on.
+
+Adjustments to the html backbone to more clearly structure the site into a header (containing the image), a top field (displaying instructions or the match counter, depending on the state), the main table (containing the match or the start button, depending on the state) a bottom field (containing the extra options) and a result field (containing the score table or the sorter data). 
+
+The "hide" button will now only be displayed if there actually is something to hide.
+
+Technical changes: 
+Merged the lowRandomizer and shareRandomizer functions into the main getElement function, as they aren't used anywhere else.
+Merged the phase indicator into the getElement and showImage functions and coded it as a relevant variable rather than harc-coding the phase indicator.
+Added a "launch" function that is triggered by the "Start!"-button.
+
+
+2022-04-16
+Made the cleaning feature more accessible by promting it by buttons. The sorter will now display a "Clean..." button upon launch. If clicked, it will list the characters defined in the "remove" array and ask you to confirm or go back. Characters are only removed from the array if "Confirm" is selected. You still need to actually define the "remove" array externally in the data.js file though.
+
+Added a button under "Show Data" labled "Debug Mode", which displays additional internal variables usefull for testing functionality. Since these variables are of little interest for the end user, they aren't displayed by default.
+
+
+2022-04-18
+Added a data validation feature that checks if the array is defined properly. If any problems are found, the script will display an error message instead of becoming defunct. A similar error message will be displayed if no remove array is defined when attempting to remove characters from presorted data.
+
+Tweaked the result table layout to be more consistent, regardless of the state you are in. Especially the force match buttons now resemble more the start and clean buttons.
+
+The Clean feature now lists the characters to be removed in a table format including their images and IDs.
+
+Technical changes:
+Defined a validate function to check if array data is ok.
+Defined a resultTable class to move the table formatting out of the functions that parse the table code.
+Defined a new button class for the force match buttons.
+Tweaked the toPic function (now called toImg) to include a parameter for image size, making use of it in the clean function.
+
+
+2022-04-19
+Fixed an oversight where clicking "Show Scores" before launching the script will not trigger data validation.
+Script will now remove all buttons if data validation failed, preventing the user from pressing buttons that are defunct.
+Changed file type of the data file to .txt to avoid conflicts when saving the file and inteference from distrustful antimalware applications.
+
+Technical changes:
+Removed "ToName" function as it's superfluous.
+
+
+2022-04-20: ver. 1.3
+Added a save file prompt that is triggered by clicking "Save Data". You can still manually display and save data by clicking on "Debug Mode".
+Along with this, defined a variable that determines if the "Confirm before closing" dialogue is displayed. It is now only displayed, if you decided a matchup but did not save your data.
+Added Debug Mode to the "Show Scores" area.
+
+Technical changes:
+To accomodate for the 2 different display methods when exporting data, the function was split into 2: one writing data to a text file, another for writing html code displaying data on the page.
+
+
+2022-04-21: vers. 1.4
+Force Match will now repeat matches for the same character "threshold" times. This is because I found it cumbersome to scroll down and select the same character over and over again if I feel they need more than 1 match to shift them to the right score range.
+Along with this change, the sorter will display a message in the top field if you are in a force match loop.
+
+technical changes: vers. 1.4
+- new variable "repeat" that counts down after clicking the force match button.
+- new varibale "charID" to store the character's prime ID, in case the array gets scrambled while in repeat mode.
+- minor adjustments to code syntax and function variables
+
+
+2022-04-22: vers. 1.5.0a
+Debug Mode now sorts array by matches. This is to enable this view later in the sorting process, to maybe give a sense of which characters had the least matches yet.
+To further avoid chars to get stuck in the mid score range and the sorter torturing you with shared scores of the same chars over and over again, it will now do a match with a char of low match number every so often.
+Minor changes to table layout.
+Low Randomizer now always picks the character with the lowest match number to make sure single charactes with low match numbers don't slip through the randomizer if you get unlucky with a large character pool.
+
+
+2022-04-23:
+Found major bug in sorting algorithm that evaluates the wrong characters when using the shareRandomizer in phase 2. Reverted back to version 1.3 as this was found to be the latest working version.
+
+
+
+2022-04-24: vers. 2.0
+Kept the new table layout from 1.5.0a.
+The way the sorter records matches has been changed to make the data more accessible for planned future updates. The matches array now stores the IDs of the left and right characters, as well as the matchup flag to record the outcome. This makes it easier to use the match data instead of reculculating the results from the matchID.
+Along with this change, a new function "checkKey" has been added to check if the match has occured before. A new variable "outcome" has been added to temporarily store the matchup flag for genKey to use.
+
+The forcematch function has been merged with what previously was shareRandomizer. This is to make way to use forceMatch exclusively for the force match buttons.
+
+Phase indicator was modified. It will now display phase 3 if the data consists of all unique scores, meaning it is completely sorted. Phase 4 is now what was previously phase 3. Note that the sorter can jump down to phase 2 when a match in phase 3 ended up tying to scores of some characters.
+
+Re-added the scramble feature that generates a match for the char with least matches so far every "threshold" times.
+
+Found the bug that evaluates the characters: debug mode sorts by matches since 1.4, so if clicked, the displayed characters aren't valid anymore. This should also happen if score table is displayed before phase 2, so this bug existed since the beginning to a lesser magnitude. Previously evaluated scores might be faulty.
+To prevent this bug, implemented variables "char1" and "char2" that store the index of the character. MatchUp searches for the match IDs stored in "left" and "right", converts them to character indices, and only then evaluates the match. Along with this change, the toName function was reimplemented.
+
+Reimplemented the scramble functionality.
+Reimplemented forced match loop.
+Adjusted remove function for new data structure of the remove array.
+restructured some syntax to make the code shorter and easier to read.
+
+
+2022-04-25: vers. 2.0.1
+Technical changes:
+- some more syntax changes and removing duplicate statements
+- merges debug function with export data function
+
+
+2022-04-26 vers. 2.1
+%age sorted is now displayed in the header as part of the phase message. Removed the value from the score table view as it's now redundant.
+
+Technical changes:
+- remerged checkProgress into getElement
+
+
+2022-04-27 vers. 2.1.1
+changed the way the sorter calculates progress %age, now starting at 0 instead of 1/characters.
+some optimizations in how phase indicater gets updated, making in more consistent and preventing it to jump down.
+
+Technical changes:
+Merged genData with launch function and further disentangled some code.
+
+2022-04-28 vers. 2.1.2
+Data validation now takes places upon launch, not when a button is pressed.
+Minor change in display for the force match state.
+
+Technical changes:
+moved data validation check to sorter.html
+
+
+2022-04-29	vers. 2.1.3
+Added the match count to the score table in force match mode, to make it easier to see which chars are likely misranked due to low number of matches. Along with this, moved the "Match!" button to the right of the table.
+
+
+2022-04-30	vers. 2.2
+The sorter will now intereupt the sorting progress if your list is fully sorted. You will then have to click on "Continue" to keep sorting. This is to prevent you from accidently keep going and tying the scores of characters again when you already had a fully sorted list.
+Removed "Force Match" option from "Continue" screen because it is defunct in that state.
+
+
+2022-05-01	vers. 2.2.1
+Result table will now be automatically displayed if progress reaches 100%.
+Made the sorter display the the "Continue" screen again, if your score hits 100% after deciding threshold matches since the last continue screen.
+
+2022-05-01	vers. 2.2.2
+Made the Force Match option work even if not in match mode. This is accomplished by a function "genTable" that is called by force match and launch.
+Buttons now only show up on screens where they will visually change something, so they don't appear to be defunct.

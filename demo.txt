@@ -1,0 +1,22 @@
+// to use this array in the sorter, backup your "data.txt" file and rename this one to "data.txt".
+// alternatively, you can edit following line in the "sorter.html" file:
+// <script src="data.js"></script>
+// to point to array-demo.js
+
+var remove = [ 18 ];
+
+var charArray = [
+[ 'Ban', 'https://i.imgur.com/ujZz8g9.png', 0, 0, 47 ],
+[ 'Kurisu Makise', 'https://i.imgur.com/4f5dyk6.png', 0, 0, 43 ],
+[ 'Deadpool', 'https://i.imgur.com/hVMq3nV.png', 0, 0, 41 ],
+[ 'Brunhilde', 'https://i.imgur.com/Im0fCwP.png', 0, 0, 37 ],
+[ 'Yami Sukehiro', 'https://i.imgur.com/HU9uwuO.png', 0, 0, 31 ],
+[ 'Edward Elric', 'https://i.imgur.com/FIzqz2k.png', 0, 0, 29 ],
+[ 'Rei Hino', 'https://i.imgur.com/WzhC87G.png', 0, 0, 23 ],
+[ 'Satoru Gojo', 'https://i.imgur.com/kIrl2Qe.png', 0, 0, 19 ],
+[ 'Soul Eater Evans', 'https://i.imgur.com/vTQJtTJ.png', 0, 0, 13 ],
+[ 'William Moriarty', 'https://i.imgur.com/aM6V4kC.png', 0, 0, 11 ],
+[ 'Naruto Uzumaki', 'https://i.imgur.com/bLMTsYo.png', 0, 0, 7 ],
+["Mayuri Shiina", "https://i.imgur.com/gYVhsgr.png" ],
+["Taiga Kagami", "https://i.imgur.com/BfONHuJ.png" ]
+];
